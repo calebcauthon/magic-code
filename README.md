@@ -18,7 +18,13 @@ If you have any requirements or dependencies, add a section describing those and
 
 ## Extension Settings
 
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
+Add prompt options like this:
+```
+"magic-code.templates": {
+    "SnarkyComments": "Add snarky in-line comments to the following javascript code.",
+    "Uncle Bob": "Use long, descriptive names for each variable."
+}
+```
 
 For example:
 
