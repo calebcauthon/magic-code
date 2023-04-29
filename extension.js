@@ -3,11 +3,25 @@ const goCommand = require('./commands/go');
 const localAPI = require('./lib/localAPI');
 const trySafely = require('./lib/trySafely');
 
-function activate(context) {
-	let processSelectedTextCommand = vscode.commands.registerCommand('magic-code.processSelectedText', () => {
-		trySafely.trySafely(() => {
+async function activate(context) {
+	const config = vscode.workspace.getConfiguration("magic-code");
+    const templates = config.get("templates");
+	const keys = Object.keys(templates);
+
+	let processSelectedTextCommand = vscode.commands.registerCommand('magic-code.processSelectedText', async () => {
+		trySafely.trySafely(async () => {
+			const selectedKey = await vscode.window.showQuickPick(keys, {
+                placeHolder: 'Select a template'
+            });
+
+            if (!selectedKey) {
+                return;
+            }
+
+			const setup = templates[selectedKey];
+
 			const template = {
-				setup: "Add snarky in-line comments to the following javascript code.",
+				setup,
 				prompt: (data) => `
 				-------------
 				

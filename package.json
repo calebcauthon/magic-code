@@ -19,6 +19,11 @@
           "type": "string",
           "default": "sk-<your key here>",
           "description": "OpenAI API KEY"
+        },
+        "magic-code.templates": {
+          "type": "object",
+          "default": {},
+          "description": "Templates for code processing"
         }
       }
     },
