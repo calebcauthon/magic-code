@@ -13,24 +13,19 @@ const command = (() => {
             if (!selection.isEmpty) {
                 const selectedText = document.getText(selection);
 
-                try {
-                    const suggestion = await getSuggestion(selectedText);
-                    const result = await showPopup(suggestion);
+                const suggestion = await getSuggestion(selectedText);
+                const result = await showPopup(suggestion);
 
-                    if (result) {
-                        applySuggestion(editor, selection, suggestion);
-                    }
-                } catch (error) {
-                    injected.vscode.window.showErrorMessage('Error calling the external API: ' + error.message);
+                if (result) {
+                    applySuggestion(editor, selection, suggestion);
                 }
             }
         }
     }
 
     async function getSuggestion(selectedText) {
-        const apiResponse = await injected.callExternalAPI(selectedText);
-        console.log(apiResponse);
-        return extractCodeFrom(apiResponse.output);
+        const chatResponse = await injected.callExternalAPI(selectedText);
+        return extractCodeFrom(chatResponse);
     }
 
     async function showPopup(suggestion) {
@@ -55,29 +50,28 @@ const command = (() => {
     }
 
     function extractCodeFrom(output) {
-	// check to see if the code contains two lines that contain ```
-	var firstLine = output.indexOf('```');
-	var lastLine = output.lastIndexOf('```');
-	if (firstLine !== -1 && lastLine !== -1) {
-		const lines = output.split('\n');
-		const firstLine = lines.findIndex(line => line.includes('```'));
-		const lastLine = lines.slice(firstLine + 1).findIndex(line => line.includes('```')) + firstLine + 1;
-		const code = lines.slice(firstLine + 1, lastLine).join('\n');
-		return extractCodeFrom(code);
-	}
+        var firstLine = output.indexOf('```');
+        var lastLine = output.lastIndexOf('```');
+        if (firstLine !== -1 && lastLine !== -1) {
+            const lines = output.split('\n');
+            const firstLine = lines.findIndex(line => line.includes('```'));
+            const lastLine = lines.slice(firstLine + 1).findIndex(line => line.includes('```')) + firstLine + 1;
+            const code = lines.slice(firstLine + 1, lastLine).join('\n');
+            return extractCodeFrom(code);
+        }
 
-	var firstLine = output.indexOf('----');
-	var lastLine = output.lastIndexOf('----');
-	if (firstLine !== -1 && lastLine !== -1) {
-		const lines = output.split('\n');
-		const firstLine = lines.findIndex(line => line.includes('----'));
-		const lastLine = lines.slice(firstLine + 1).findIndex(line => line.includes('----')) + firstLine + 1;
-		const code = lines.slice(firstLine + 1, lastLine).join('\n');
-		return extractCodeFrom(code);
-	}
+        var firstLine = output.indexOf('----');
+        var lastLine = output.lastIndexOf('----');
+        if (firstLine !== -1 && lastLine !== -1) {
+            const lines = output.split('\n');
+            const firstLine = lines.findIndex(line => line.includes('----'));
+            const lastLine = lines.slice(firstLine + 1).findIndex(line => line.includes('----')) + firstLine + 1;
+            const code = lines.slice(firstLine + 1, lastLine).join('\n');
+            return extractCodeFrom(code);
+        }
 
-	return output;
-}
+        return output;
+    }
 
     return {
         init,
