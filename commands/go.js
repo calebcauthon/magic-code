@@ -18,7 +18,7 @@ const command = (() => {
 
             if (!selection.isEmpty) {
                 const selectedText = document.getText(selection);
-                const suggestion = await transform(selectedText);
+                const suggestion = await injected.transform(selectedText);
                 const result = await showPopup(suggestion);
 
                 if (result) {

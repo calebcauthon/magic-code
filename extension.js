@@ -2,6 +2,7 @@ const vscode = require('vscode');
 const goCommand = require('./commands/go');
 const localAPI = require('./lib/localAPI');
 const trySafely = require('./lib/trySafely');
+const { getCodeFromChatResponse } = require('./lib/getCodeFromChatResponse');
 
 const config = vscode.workspace.getConfiguration('magic-code');
 localAPI.setApiKey(config.get("openai_api_key"));
