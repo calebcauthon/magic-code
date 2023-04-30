@@ -37,7 +37,7 @@
   "scripts": {
     "lint": "eslint .",
     "pretest": "npm run lint",
-    "test": "node ./test/runTest.js",
+    "test-in-vscode": "node ./test/runInVsCode.js",
     "test-quick": "node ./test/runQuickTest.js"
   },
   "devDependencies": {

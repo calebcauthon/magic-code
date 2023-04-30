@@ -3,8 +3,8 @@ const assert = require('assert');
 const { BasicTestCase } = require('../BasicTestCase');
 const go = require('../../commands/go');
 
-suite('Extension Test Suite', () => {
-	test('BasicTestCase', () => {
+suite('Go command', async () => {
+	await test('it runs', async () => {
 		const myTest = BasicTestCase;
 		myTest.given(() => {
 			return {
@@ -14,15 +14,19 @@ suite('Extension Test Suite', () => {
 			};
         }).as("vscode");
 		
-		myTest.when(() => {
+		await myTest.when(async () => {
 			const vscode = myTest.givens("vscode");
 			const transform = (codeInput) => codeInput;
 			go.init(vscode, transform);
-			go.processSelectedText();
+			try {
+				return await go.processSelectedText();
+			} catch (err) {
+				assert.fail();
+			}
         });
 		
-		myTest.then(() => {
-            console.log("FAIL?")
+		await myTest.then(async result => {
+			console.log("result", result);
         });
 	});
 });

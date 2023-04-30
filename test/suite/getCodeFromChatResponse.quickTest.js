@@ -8,7 +8,7 @@ suite('getCodeFromChatResponse', () => {
         '```',
         '----',
     ].forEach(delimiter => {
-        test('Different delimiters', async () => {
+        test(`Different delimiters: ${delimiter}`, async () => {
             const myTest = BasicTestCase;
             myTest.given(() => {
             });
@@ -29,6 +29,30 @@ suite('getCodeFromChatResponse', () => {
             await myTest.then(async result => {
                 assert.equal(result.trim(), "the-code", `using ${delimiter} delimiter`);
             });
+        });
+    });
+
+    test('Backticks within the block', async () => {
+        const myTest = BasicTestCase;
+        myTest.given(() => {
+        });
+
+        const backticks = '```';
+        await myTest.when(async () => {
+            const text = `
+            ${backticks}
+            the-code-1${backticks}the-code-2
+            ${backticks}
+            `;
+        
+            const callAPI = () => text;
+            const result = await getCodeFromChatResponse(callAPI, "")
+        
+            return result
+        });
+        
+        await myTest.then(async result => {
+            assert.equal(result.trim(), "the-code-1```the-code-2", 'using multiple ``` delimiters');
         });
     });
 });
