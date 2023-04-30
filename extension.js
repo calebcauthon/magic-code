@@ -3,6 +3,9 @@ const goCommand = require('./commands/go');
 const localAPI = require('./lib/localAPI');
 const trySafely = require('./lib/trySafely');
 
+const config = vscode.workspace.getConfiguration('magic-code');
+localAPI.setApiKey(config.get("openai_api_key"));
+
 async function activate(context) {
 	const config = vscode.workspace.getConfiguration("magic-code");
     const templates = config.get("templates");
@@ -25,16 +28,18 @@ async function activate(context) {
 				prompt: (data) => `
 				-------------
 				
-				${data.selectedText}
+				${data.input}
 				
 				-------------
 				End of File
 				
 				Include the code, which is between the "-------", in your response.`
 			};
-			const config = vscode.workspace.getConfiguration('magic-code');
-			localAPI.setApiKey(config.get("openai_api_key"));
-			goCommand.init(vscode, (text) => localAPI.callExternalAPI(template, text));
+			
+			const callAPI = (text) => localAPI.callExternalAPI(template, text)
+			const transform = (codeInput) => getCodeFromChatResponse(callAPI, codeInput);
+
+			goCommand.init(vscode, transform);
 			goCommand.processSelectedText();
 		});
 	});

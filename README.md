@@ -2,6 +2,12 @@
 
 This is the README for your extension "magic-code". After writing up a brief description, we recommend including the following sections.
 
+## Tests
+
+```
+npm run test-quick
+```
+
 ## Features
 
 Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.

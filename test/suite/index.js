@@ -2,7 +2,7 @@ const path = require('path');
 const Mocha = require('mocha');
 const glob = require('glob');
 
-function run() {
+function runQuick() {
 	// Create the mocha test
 	const mocha = new Mocha({
 		ui: 'tdd',
@@ -12,7 +12,7 @@ function run() {
 	const testsRoot = path.resolve(__dirname, '..');
 
 	return new Promise((c, e) => {
-		glob('**/**.test.js', { cwd: testsRoot }, (err, files) => {
+		glob('**/**.quickTest.js', { cwd: testsRoot }, (err, files) => {
 			if (err) {
 				return e(err);
 			}
@@ -38,5 +38,5 @@ function run() {
 }
 
 module.exports = {
-	run
+	runQuick
 };
