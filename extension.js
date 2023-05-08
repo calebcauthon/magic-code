@@ -34,14 +34,16 @@ async function activate(context) {
 				-------------
 				End of File
 				
-				Include the code, which is between the "-------", in your response.`
+				Follow the instructions to come up with a list of suggestions.
+				Then execute the suggestions on the code.
+				Remove the explanations of the suggestions from your response. Just give me the code.`
 			};
 			
 			const callAPI = (text) => localAPI.callExternalAPI(template, text)
 			const transform = (codeInput) => getCodeFromChatResponse(callAPI, codeInput);
 
 			goCommand.init(vscode, transform);
-			goCommand.processSelectedText();
+			await goCommand.processSelectedText();
 		});
 	});
 	context.subscriptions.push(processSelectedTextCommand);
